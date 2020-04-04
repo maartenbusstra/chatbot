@@ -30,8 +30,12 @@ module.exports = class Game {
 
   ensureMember(user) {
     const { id: userId, ...profile } = user;
-    if (!this.members.find(m => m.id === userId)) {
-      this.members.push({ id: userId, profile, score: 0 });
+    if (!this.members.find((m) => m.id === userId)) {
+      this.members.push({
+        id: userId,
+        profile: { username: user.username },
+        score: 0,
+      });
     }
   }
 
@@ -42,12 +46,12 @@ module.exports = class Game {
   addScore(userId, ts) {
     if (this.hasTsBeenClaimed(ts)) throw new Error('Timestamp claimed');
     const score = ts.score();
-    this.members.find(m => userId === m.id).score += score;
+    this.members.find((m) => userId === m.id).score += score;
     this.hits.push({ userId, tsId: ts.toUniqueId() });
   }
 
   setScore(user, score) {
     this.ensureMember(user);
-    this.members.find(m => user.id === m.id).score = score;
+    this.members.find((m) => user.id === m.id).score = score;
   }
 };

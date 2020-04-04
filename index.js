@@ -1,14 +1,17 @@
-const TelegramBot = require('node-telegram-bot-api');
-const token = '';
+const Discord = require('discord.js');
 const Timestamp = require('./Timestamp');
 const Game = require('./Game');
-const bot = new TelegramBot(token, { polling: true });
 
-const TEST = false;
-const TEST_TIME = 1565119260; // 21:21
+const client = new Discord.Client();
+
+const TEST = true;
+const TEST_TIME = 1565119260000; // 21:21
+
+const rTIME = /^(\d\d):(\d\d)$/;
+const rSTATE = /^\/clock state/;
 
 const getTimeDataFromMessage = (msg, match) => {
-  const d = new Date((TEST ? TEST_TIME : msg.date) * 1000);
+  const d = new Date(TEST ? TEST_TIME : msg.createdTimestamp);
 
   return {
     date: d,
@@ -19,33 +22,26 @@ const getTimeDataFromMessage = (msg, match) => {
   };
 };
 
-bot.onText(/^\/clock setscore (\d+)/, async (msg, match) => {
-  try {
-    const chatId = msg.chat.id;
-    const game = await Game.getGame(chatId);
-    const score = parseInt(match[1], 10);
-    game.setScore(msg.from, score);
-    bot.sendMessage(chatId, `set score of ${msg.from.first_name} to ${score}`);
-  } catch (e) {
-    console.log('error', e);
-    console.log(e);
-  }
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
 });
 
-bot.onText(/^\/clock state/, async (msg, match) => {
-  try {
-    const chatId = msg.chat.id;
-    const game = await Game.getGame(chatId);
-    bot.sendMessage(chatId, JSON.stringify(game.game, null, 2));
-  } catch (e) {
-    console.log('error', e);
-    console.log(e);
-  }
+client.on('message', (msg) => {
+  if (msg.author.id === '693794353621106708') return;
+
+  let match = rTIME.exec(msg.content);
+  if (match) handleMove(msg, match);
+  match = rSTATE.exec(msg.content);
+  if (match) handleState(msg, match);
+
+  // msg.reply(JSON.stringify(getTimeDataFromMessage(msg)));
 });
 
-bot.onText(/^(\d\d):(\d\d)$/, async (msg, match) => {
+client.login();
+
+async function handleMove(msg, match) {
   try {
-    const chatId = msg.chat.id;
+    const chatId = msg.channel.id;
     const game = await Game.getGame(chatId);
     const {
       date,
@@ -61,7 +57,7 @@ bot.onText(/^(\d\d):(\d\d)$/, async (msg, match) => {
       messageHours === messageMinutes;
 
     if (!isMatch) {
-      bot.sendMessage(msg.chat.id, `fail, no hours/minutes match :(`);
+      msg.reply(`fail, no hours/minutes match :(`);
       return;
     }
 
@@ -70,27 +66,46 @@ bot.onText(/^(\d\d):(\d\d)$/, async (msg, match) => {
       hours: messageHours,
       minutes: messageMinutes,
     });
-    game.ensureMember(msg.from);
+    game.ensureMember(msg.author);
     try {
-      game.addScore(msg.from.id, ts);
-      bot.sendMessage(
-        msg.chat.id,
-        `sweeeet 🐐 ${ts.score()} point(s) for user ${msg.from.first_name} (${
-          msg.from.id
+      game.addScore(msg.author.id, ts);
+      msg.reply(
+        `sweeeet 🐐 ${ts.score()} point(s) for user ${msg.author.username} (${
+          msg.author.id
         })
-  
+
 current scores:
-${game.members.map(m => `${m.profile.first_name}: ${m.score}\n`)}`,
+${game.members.map((m) => `${m.profile.username}: ${m.score}\n`)}`,
       );
     } catch (e) {
-      bot.sendMessage(msg.chat.id, `Whoops, timestamp already claimed 🤷‍♂️`);
+      msg.reply(`Whoops, timestamp already claimed 🤷‍♂️`);
     }
   } catch (e) {
     console.log('error', e);
     console.log(e);
   }
-});
+}
 
-// bot.on('message', async msg => {
-
+// bot.onText(/^\/clock setscore (\d+)/, async (msg, match) => {
+//   try {
+//     const chatId = msg.chat.id;
+//     const game = await Game.getGame(chatId);
+//     const score = parseInt(match[1], 10);
+//     game.setScore(msg.from, score);
+//     msg.reply(chatId, `set score of ${msg.from.first_name} to ${score}`);
+//   } catch (e) {
+//     console.log('error', e);
+//     console.log(e);
+//   }
 // });
+
+async function handleState(msg) {
+  try {
+    const chatId = msg.channel.id;
+    const game = await Game.getGame(chatId);
+    msg.reply(JSON.stringify(game.game, null, 2));
+  } catch (e) {
+    console.log('error', e);
+    console.log(e);
+  }
+}
