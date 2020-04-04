@@ -1,20 +1,12 @@
-const GAMES = {
-  '56863965': {
-    members: [{ id: '56863965', profile: {}, score: 0 }],
-    hits: [{ userId: '56863965', tsId: '3|7|2019|3|0' }],
-  },
-};
+// {
+//   '56863965': {
+//     members: [{ id: '56863965', profile: {}, score: 0 }],
+//     hits: [{ userId: '56863965', tsId: '3|7|2019|3|0' }],
+//   },
+// };
 
 module.exports = class Game {
-  static async getGame(chatId) {
-    let doc = GAMES[chatId];
-    if (!doc) {
-      GAMES[chatId] = { members: [], hits: [] };
-      doc = GAMES[chatId];
-    }
-    const game = new Game(doc);
-    return game;
-  }
+  static DEFAULT_STATE = { members: [], hits: [] };
 
   constructor(game) {
     this.game = game;
@@ -29,11 +21,11 @@ module.exports = class Game {
   }
 
   ensureMember(user) {
-    const { id: userId, ...profile } = user;
+    const { id: userId, name } = user;
     if (!this.members.find((m) => m.id === userId)) {
       this.members.push({
         id: userId,
-        profile: { username: user.username },
+        profile: { username: name },
         score: 0,
       });
     }
