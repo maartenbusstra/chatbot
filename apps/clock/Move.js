@@ -1,4 +1,4 @@
-const TEST = process.env.TEST;
+const TEST = process.env.TEST === 'true';
 
 module.exports = class Move {
   constructor({ date, hours, minutes, messageMinutes, messageHours }) {

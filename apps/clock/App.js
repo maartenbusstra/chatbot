@@ -41,9 +41,7 @@ module.exports = class App {
     message.reply(
       `${reply}
 
-Current scores:
-
-${game.members.map((m) => `${m.user.name}: ${m.score}\n`)}`,
+${game.scoreboard()}`,
     );
   }
 };

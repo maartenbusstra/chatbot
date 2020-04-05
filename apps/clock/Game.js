@@ -20,6 +20,11 @@ module.exports = class Game {
     return { reply: 'score!', state: this.state };
   }
 
+  scoreboard() {
+    return `Current scores:
+${this.members.map((m) => `${m.user.name}: ${m.score}\n`)}`;
+  }
+
   get members() {
     return this.state.members;
   }
