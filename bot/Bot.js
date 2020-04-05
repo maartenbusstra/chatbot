@@ -29,8 +29,6 @@ module.exports = class Bot {
   async handleMessage(message) {
     this.processes.forEach((process) =>
       process.commands.forEach(({ command, handler }) => {
-        console.log(command, message);
-
         const match = command.exec(message.content);
         if (match) handler(match, message);
       }),

@@ -24,7 +24,6 @@ module.exports = class App {
   }
 
   handleTime(match, message) {
-    console.log('time', match, message);
     const currentState = this.storage.getItem(message.chatId);
     const game = new Game(currentState);
 
@@ -41,7 +40,6 @@ module.exports = class App {
     );
 
     this.storage.setItem(message.chatId, state);
-    console.log(reply, state);
 
     message.reply(
       `${reply}

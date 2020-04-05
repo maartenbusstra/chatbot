@@ -1,25 +1,17 @@
+require('dotenv').config();
+const MemoryStore = require('./lib/MemoryStore');
 const Bot = require('./bot/Bot');
 const Clock = require('./apps/clock');
 const Discord = require('./connectors/Discord');
 
 const discord = new Discord({
-  token: '',
+  token: process.env.DISCORD_TOKEN,
 });
-
-const memoryStore = {
-  db: {},
-  getItem(key) {
-    return this.db[key];
-  },
-  setItem(key, value) {
-    this.db[key] = value;
-  },
-};
 
 const bot = new Bot({
   connector: discord,
   // storage: new discord.MessageStore(),
-  storage: memoryStore,
+  storage: new MemoryStore(),
   apps: [Clock],
 });
 
