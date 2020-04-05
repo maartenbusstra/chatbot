@@ -1,4 +1,3 @@
-const Message = require('../../lib/Message');
 const Game = require('./Game');
 
 module.exports = class App {
