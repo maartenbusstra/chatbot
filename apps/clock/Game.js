@@ -22,7 +22,7 @@ module.exports = class Game {
 
   scoreboard() {
     return `Current scores:
-${this.members.map((m) => `${m.user.name}: ${m.score}\n`)}`;
+${this.members.map((m) => `${m.user.name}: ${m.score}`).join('\n')}`;
   }
 
   get members() {
