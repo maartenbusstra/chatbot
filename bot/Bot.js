@@ -1,18 +1,28 @@
-const Message = require('./Message');
-
 module.exports = class Bot {
-  constructor({ connector, apps }) {
+  constructor({ connector, apps, storage }) {
     this.connector = connector;
     this.apps = apps;
+    this.storage = storage;
   }
 
   async init() {
-    this.connector.subscribe((...args) => this.handleMessage(...args));
-    await this.connector.connect();
+    await this.connector.connect((...args) => this.handleMessage(...args));
   }
 
   async start() {
-    this.processes = this.apps.map((app) => app.init());
+    const { storage } = this;
+    this.processes = this.apps.map((app) =>
+      app.init({
+        storage: {
+          getItem(key) {
+            return storage.getItem(`${app.name}:${key}`);
+          },
+          setItem(key, value) {
+            return storage.setItem(`${app.name}:${key}`, value);
+          },
+        },
+      }),
+    );
     await this.init();
   }
 

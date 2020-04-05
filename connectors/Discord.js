@@ -1,23 +1,21 @@
 const DiscordJS = require('discord.js');
-const Message = require('../bot/Message');
+const Message = require('../lib/Message');
 
 module.exports = class Discord {
-  constructor({ token, botId }) {
+  constructor({ token }) {
     this.token = token;
-    this.botId = botId;
-    this.subs = [];
   }
 
-  connect() {
+  connect(handleMessage) {
     this.client = new DiscordJS.Client();
     this.client.on('ready', () => {
       console.log(`Logged in as ${this.client.user.tag}!`);
     });
 
     this.client.on('message', (msg) => {
-      if (msg.author.id === this.botId) return;
+      if (msg.author.id === this.client.user.id) return;
 
-      this.publish(
+      handleMessage(
         new Message({
           id: msg.id,
           user: {
@@ -27,17 +25,11 @@ module.exports = class Discord {
           content: msg.content,
           chatId: msg.channel.id,
           createdAt: msg.createdTimestamp,
+          reply: (content) => msg.reply(content),
         }),
       );
     });
+
     this.client.login(this.token);
-  }
-
-  subscribe(cb) {
-    this.subs.push(cb);
-  }
-
-  publish(message) {
-    this.subs.forEach((sub) => sub(message));
   }
 };
