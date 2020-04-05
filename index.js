@@ -1,10 +1,15 @@
-const Bot = require('./Bot');
-const Discord = require('./services/Discord');
+const Bot = require('./bot/Bot');
+const Clock = require('./apps/clock');
+const Discord = require('./connectors/Discord');
+
+const discord = new Discord({
+  token: '',
+});
 
 const bot = new Bot({
-  service: new Discord({
-    token: 'NjkzNzk0MzUzNjIxMTA2NzA4.XoiMYw.54JFAHgEeyd28FPP1hKGch3w1i0',
-  }),
+  connector: discord,
+  // storage: new discord.MessageStore(),
+  apps: [Clock],
 });
 
 bot.start();
