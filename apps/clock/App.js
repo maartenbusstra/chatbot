@@ -1,8 +1,6 @@
 const Message = require('../../lib/Message');
 const Game = require('./Game');
 
-const TEST = false;
-
 module.exports = class App {
   static name = 'clock';
 
