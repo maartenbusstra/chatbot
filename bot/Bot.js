@@ -30,7 +30,7 @@ module.exports = class Bot {
     this.processes.forEach((process) =>
       process.commands.forEach(({ command, handler }) => {
         const match = command.exec(message.content);
-        if (match) handler(match, message);
+        if (match) handler(message, match);
       }),
     );
   }

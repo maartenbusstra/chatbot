@@ -12,6 +12,10 @@ module.exports = class App {
           command: /^(\d\d):(\d\d)$/,
           handler: (...args) => app.handleTime(...args),
         },
+        {
+          command: /^\/clock score$/,
+          handler: (...args) => app.handleScore(...args),
+        },
       ],
     };
   }
@@ -20,7 +24,7 @@ module.exports = class App {
     this.storage = storage;
   }
 
-  handleTime(match, message) {
+  handleTime(message, match) {
     const currentState = this.storage.getItem(message.chatId);
     const game = new Game(currentState);
 
@@ -43,5 +47,10 @@ module.exports = class App {
 
 ${game.scoreboard()}`,
     );
+  }
+  handleScore(message) {
+    const currentState = this.storage.getItem(message.chatId);
+    const game = new Game(currentState);
+    message.reply(`\n${game.scoreboard()}`);
   }
 };
