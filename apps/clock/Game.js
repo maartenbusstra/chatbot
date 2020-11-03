@@ -5,7 +5,7 @@ module.exports = class Game {
   static DEFAULT_STATE = { members: [], hits: [] };
 
   constructor(state) {
-    this.state = state || Game.DEFAULT_STATE;
+    this.state = state || { members: [], hits: [] };
   }
 
   handleMove(user, move) {
@@ -20,9 +20,13 @@ module.exports = class Game {
     return { reply: 'score!', state: this.state };
   }
 
+  reset() {
+    this.state = { members: [], hits: [] };
+  }
+
   scoreboard() {
     return `Current scores:
-${this.members.map((m) => `${m.user.name}: ${m.score}`).join('\n')}`;
+${this.members.map(m => `${m.user.name}: ${m.score}`).join('\n')}`;
   }
 
   get members() {
@@ -34,7 +38,7 @@ ${this.members.map((m) => `${m.user.name}: ${m.score}`).join('\n')}`;
   }
 
   ensureMember(user) {
-    if (!this.members.find((m) => m.user.id === user.id)) {
+    if (!this.members.find(m => m.user.id === user.id)) {
       this.members.push({ user, score: 0 });
     }
   }
@@ -44,12 +48,12 @@ ${this.members.map((m) => `${m.user.name}: ${m.score}`).join('\n')}`;
   }
 
   addScore(userId, move) {
-    this.members.find((m) => userId === m.user.id).score += move.score();
+    this.members.find(m => userId === m.user.id).score += move.score();
     this.hits.push({ userId, moveId: move.toUniqueId() });
   }
 
   setScore(user, score) {
     this.ensureMember(user);
-    this.members.find((m) => user.id === m.id).score = score;
+    this.members.find(m => user.id === m.id).score = score;
   }
 };
