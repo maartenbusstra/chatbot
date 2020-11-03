@@ -25,8 +25,11 @@ module.exports = class Game {
   }
 
   scoreboard() {
-    return `Current scores:
-${this.members.map(m => `${m.user.name}: ${m.score}`).join('\n')}`;
+    const scores = this.members
+      .sort((a, b) => (a.score < b.score ? 1 : -1)) // TODO: pure sort
+      .map(m => `${m.user.name}: ${m.score}`)
+      .join('\n');
+    return `Current scores:\n${scores}`;
   }
 
   get members() {
