@@ -73,6 +73,7 @@ ${game.scoreboard()}`
     message.reply(`recalculating :robot:`);
     const game = new Game();
     const msgs = await message.channel.getMessages();
+    msgs.reverse();
     msgs.forEach(m => {
       const match = MOVE_REGEX.exec(m.content);
       if (!match) return;

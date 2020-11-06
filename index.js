@@ -10,7 +10,6 @@ const discord = new Discord({
 
 const bot = new Bot({
   connector: discord,
-  // storage: new discord.MessageStore(),
   storage: new MemoryStore(),
   apps: [Clock],
 });

@@ -27,7 +27,7 @@ module.exports = class Move {
 
   toUniqueId() {
     return [
-      this.date.getDay(),
+      this.date.getDate(),
       this.date.getMonth(),
       this.date.getFullYear(),
       this.date.getHours(),
