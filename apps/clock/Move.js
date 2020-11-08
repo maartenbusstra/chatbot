@@ -1,4 +1,16 @@
-const TEST = process.env.TEST === 'true';
+const SPECIAL_MOVES = {
+  '00:00': 2,
+  '11:11': 2,
+  '22:22': 2,
+
+  '12:34': 1,
+  '13:37': 3,
+};
+
+const padTimePart = part => {
+  let str = part.toString();
+  return str.length === 1 ? `0${str}` : str;
+};
 
 module.exports = class Move {
   constructor({ date, hours, minutes, messageMinutes, messageHours }) {
@@ -10,19 +22,24 @@ module.exports = class Move {
   }
 
   score() {
-    if (TEST) return 1;
+    if (this.isSpecialMove()) return SPECIAL_MOVES[this.toString()];
     if (this.hours !== this.minutes) return 0;
-    if (this.hours === 0 || this.hours == 11 || this.hours === 22) return 2;
     return 1;
   }
 
+  toString() {
+    return [this.messageHours, this.messageMinutes].map(padTimePart).join(':');
+  }
+
+  isSpecialMove() {
+    return Object.keys(SPECIAL_MOVES).indexOf(this.toString()) > -1;
+  }
+
   isValid() {
-    return (
-      !!TEST ||
-      (this.hours === this.messageHours &&
-        this.minutes === this.messageMinutes &&
-        this.messageHours === this.messageMinutes)
-    );
+    if (!(this.hours === this.messageHours && this.minutes === this.messageMinutes)) {
+      return false;
+    }
+    return this.messageHours === this.messageMinutes || this.isSpecialMove();
   }
 
   toUniqueId() {
