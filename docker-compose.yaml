@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  worker:
+    build:
+      context: ./services/worker
+      dockerfile: Dockerfile.dev
+    # ports:
+      # - 5000:80
+    volumes:
+      - ./services/worker/src:/app/src

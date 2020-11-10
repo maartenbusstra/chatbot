@@ -1,0 +1,10 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1
+ENV ASPNETCORE_URLS=http://+:80
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+WORKDIR /app
+EXPOSE 80
+
+COPY . .
+
+ENTRYPOINT [ "dotnet", "watch", "run", "--no-launch-profile" ]
