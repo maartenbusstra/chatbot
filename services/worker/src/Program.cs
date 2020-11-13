@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 using bot.Adapters;
 using bot.Connectors;
 using bot.Apps;
@@ -13,7 +14,7 @@ namespace bot
     public async Task MainAsync()
     {
       var bot = new Bot(
-        new DiscordConnector(""),
+        new DiscordConnector(Environment.GetEnvironmentVariable("DISCORD_TOKEN")),
         new List<IBotApp>(new IBotApp[] { new Clock() }),
         new MemoryAdapter()
       );
