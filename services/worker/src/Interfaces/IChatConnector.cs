@@ -7,7 +7,7 @@ namespace bot
   {
     public Models.Message Message;
   }
-  public interface IChatConnector
+  public interface IConnector
   {
     event EventHandler<MessageReceivedEventArgs> MessageReceived;
     Task Connect();

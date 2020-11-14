@@ -7,9 +7,9 @@ namespace bot.Models
 
     public string Id;
     private string _connectorId;
-    private readonly IChatConnector _connector;
+    private readonly IConnector _connector;
 
-    public Channel(string connectorId, IChatConnector connector)
+    public Channel(string connectorId, IConnector connector)
     {
       _connectorId = connectorId;
       _connector = connector;

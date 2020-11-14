@@ -6,7 +6,7 @@ using bot.Models;
 
 namespace bot.Connectors
 {
-  public class DiscordConnector : IChatConnector
+  public class DiscordConnector : IConnector
   {
     private DiscordSocketClient _client;
     public event EventHandler<MessageReceivedEventArgs> MessageReceived;
@@ -52,8 +52,6 @@ namespace bot.Connectors
       EventHandler<MessageReceivedEventArgs> handler = MessageReceived;
 
       handler?.Invoke(this, new MessageReceivedEventArgs() { Message = m });
-
-
 
       if (message.Content == "!ping")
       {

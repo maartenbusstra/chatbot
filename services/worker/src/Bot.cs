@@ -7,13 +7,13 @@ namespace bot
 {
   public class Bot
   {
-    private readonly IChatConnector _connector;
+    private readonly IConnector _connector;
     private readonly List<IBotApp> _apps;
     private readonly IStorageAdapter _storage;
 
     private IEnumerable<IBotApp> processes { get; set; }
 
-    public Bot(IChatConnector connector, List<IBotApp> apps, IStorageAdapter storage)
+    public Bot(IConnector connector, List<IBotApp> apps, IStorageAdapter storage)
     {
       _connector = connector;
       _connector.MessageReceived += HandleMessage;
