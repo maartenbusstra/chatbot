@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using bot.Models;
-using bot;
 using System.Text.RegularExpressions;
 
 namespace bot.Apps
@@ -15,7 +14,5 @@ namespace bot.Apps
       // blabla
       message.Reply("YAY");
     }
-
   }
-
 }
