@@ -16,7 +16,7 @@ namespace bot
     public Bot(IChatConnector connector, List<IBotApp> apps, IStorageAdapter storage)
     {
       _connector = connector;
-      // _connector.HandleMessage += HandleMessage;
+      _connector.MessageReceived += HandleMessage;
       _apps = apps;
       _storage = storage;
     }
@@ -31,9 +31,9 @@ namespace bot
       await _connector.Connect();
     }
 
-    private async Task HandleMessage(Message message)
+    private void HandleMessage(object sender, MessageReceivedEventArgs args)
     {
-
+      System.Console.WriteLine("received" + args.Message.Content);
     }
   }
 }

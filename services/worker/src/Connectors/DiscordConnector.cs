@@ -2,14 +2,16 @@ using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using bot.Models;
 
 namespace bot.Connectors
 {
   public class DiscordConnector : IChatConnector
   {
     private DiscordSocketClient _client;
-    public event EventHandler MessageReceived;
+    public event EventHandler<MessageReceivedEventArgs> MessageReceived;
     private string _token;
+
     public DiscordConnector(string token)
     {
       System.Console.WriteLine("hello");
@@ -37,6 +39,22 @@ namespace bot.Connectors
     }
     private async Task DiscordMessageReceived(SocketMessage message)
     {
+      Message m = new Message()
+      {
+        Id = message.Id.ToString(),
+        Content = message.Content,
+        ChatId = message.Channel.Id,
+        User = new User() { Id = message.Author.Id, Name = message.Author.Username },
+        Channel = message.Channel,
+        CreatedAt = message.TimeStamp
+      };
+
+      EventHandler<MessageReceivedEventArgs> handler = MessageReceived;
+
+      handler?.Invoke(this, new MessageReceivedEventArgs() { Message = m });
+
+
+
       if (message.Content == "!ping")
       {
         await message.Channel.SendMessageAsync("Pong!");
@@ -44,4 +62,3 @@ namespace bot.Connectors
     }
   }
 }
-// public event Func<SocketMessage, Task> MessageReceived
