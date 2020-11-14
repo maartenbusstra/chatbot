@@ -31,9 +31,15 @@ namespace bot
       await _connector.Connect();
     }
 
-    private void HandleMessage(object sender, MessageReceivedEventArgs args)
+    private async void HandleMessage(object sender, MessageReceivedEventArgs args)
     {
-      System.Console.WriteLine("received" + args.Message.Content);
+      Message m = args.Message;
+
+      System.Console.WriteLine("received " + m.Content + " " + m.CreatedAt);
+      m.Reply("reply");
+      List<Message> messages = await m.Chat.GetMessages();
+      if (messages.Count > 0)
+        System.Console.WriteLine("received " + messages[3].Content);
     }
   }
 }

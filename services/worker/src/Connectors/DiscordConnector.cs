@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Rest;
 using Discord.WebSocket;
 using bot.Models;
 
@@ -9,6 +11,7 @@ namespace bot.Connectors
   public class DiscordConnector : IConnector
   {
     private DiscordSocketClient _client;
+    private DiscordRestClient _restClient;
     public event EventHandler<MessageReceivedEventArgs> MessageReceived;
     private string _token;
 
@@ -34,29 +37,46 @@ namespace bot.Connectors
       await _client.LoginAsync(TokenType.Bot, _token);
       await _client.StartAsync();
 
+      _restClient = new DiscordRestClient();
+      await _restClient.LoginAsync(TokenType.Bot, _token);
+
       // Block this task until the program is closed.
       await Task.Delay(-1);
     }
+
+    public async Task<List<Message>> GetChatMessages(string id)
+    {
+      IMessageChannel channel = await _restClient.GetChannelAsync(Convert.ToUInt64(id.Split(":")[1])) as IMessageChannel;
+
+      var messages = await channel.GetMessagesAsync().FlattenAsync();
+      foreach (IMessage message in messages)
+      {
+        Console.WriteLine(message.Content);
+      }
+      return new List<Message>();
+    }
+
     private async Task DiscordMessageReceived(SocketMessage message)
     {
+      Chat c = new Chat(connector: this, connectorId: message.Channel.Id.ToString())
+      {
+        Id = "discord:" + message.Channel.Id.ToString(),
+      };
       Message m = new Message()
       {
         Id = message.Id.ToString(),
         Content = message.Content,
-        ChatId = message.Channel.Id,
-        User = new User() { Id = message.Author.Id, Name = message.Author.Username },
-        Channel = message.Channel,
-        CreatedAt = message.TimeStamp
+        User = new User() { Id = "discord:" + message.Author.Id.ToString(), Name = message.Author.Username },
+        Chat = c,
+        CreatedAt = message.CreatedAt.DateTime,
       };
 
       EventHandler<MessageReceivedEventArgs> handler = MessageReceived;
 
       handler?.Invoke(this, new MessageReceivedEventArgs() { Message = m });
-
-      if (message.Content == "!ping")
-      {
-        await message.Channel.SendMessageAsync("Pong!");
-      }
+      // {
+      //   await message.Channel.SendMessageAsync("Pong!");
+      // }
     }
   }
 }

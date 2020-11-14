@@ -1,5 +1,7 @@
-using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using bot.Models;
 
 namespace bot
 {
@@ -11,5 +13,6 @@ namespace bot
   {
     event EventHandler<MessageReceivedEventArgs> MessageReceived;
     Task Connect();
+    Task<List<Message>> GetChatMessages(string id);
   }
 }

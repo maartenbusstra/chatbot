@@ -5,9 +5,8 @@ namespace bot.Models
   public class Message
   {
     public string Id;
-    public string ChatId;
-    public User user;
-    public Channel Channel;
+    public User User;
+    public Chat Chat;
     public string Content;
     public DateTime CreatedAt;
     public void Reply(string s)
