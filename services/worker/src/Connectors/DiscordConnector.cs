@@ -44,20 +44,28 @@ namespace bot.Connectors
       await Task.Delay(-1);
     }
 
-    public async Task<List<Message>> GetChatMessages(string id)
+    private async Task<IMessageChannel> GetChannel(string id)
     {
       IMessageChannel channel = await _restClient.GetChannelAsync(Convert.ToUInt64(id.Split(":")[1])) as IMessageChannel;
+      return channel;
+    }
 
+    public async Task<List<Message>> GetChatMessages(string id)
+    {
+      IMessageChannel channel = await GetChannel(id);
       var messages = await channel.GetMessagesAsync().FlattenAsync();
-      foreach (IMessage message in messages)
-      {
-        Console.WriteLine(message.Content);
-      }
       return new List<Message>();
+    }
+
+    public async Task SendMessage(string chatId, string content)
+    {
+      IMessageChannel channel = await GetChannel(chatId);
+      await channel.SendMessageAsync(content);
     }
 
     private async Task DiscordMessageReceived(SocketMessage message)
     {
+      if (message.Author.Id == _client.CurrentUser.Id) return;
       Chat c = new Chat(connector: this, connectorId: message.Channel.Id.ToString())
       {
         Id = "discord:" + message.Channel.Id.ToString(),

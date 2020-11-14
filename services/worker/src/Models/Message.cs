@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace bot.Models
 {
@@ -9,9 +10,9 @@ namespace bot.Models
     public Chat Chat;
     public string Content;
     public DateTime CreatedAt;
-    public void Reply(string s)
+    public async Task Reply(string content)
     {
-      System.Console.WriteLine("reply " + s);
+      await Chat.SendMessage(content);
     }
   }
 }

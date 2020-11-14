@@ -36,7 +36,7 @@ namespace bot
       Message m = args.Message;
 
       System.Console.WriteLine("received " + m.Content + " " + m.CreatedAt);
-      m.Reply("reply");
+      m.Reply("this is a reply!");
       List<Message> messages = await m.Chat.GetMessages();
       if (messages.Count > 0)
         System.Console.WriteLine("received " + messages[3].Content);

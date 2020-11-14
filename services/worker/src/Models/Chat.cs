@@ -21,5 +21,10 @@ namespace bot.Models
       var msgs = await _connector.GetChatMessages(Id);
       return new List<Message>();
     }
+
+    public async Task SendMessage(string content)
+    {
+      await _connector.SendMessage(Id, content);
+    }
   }
 }

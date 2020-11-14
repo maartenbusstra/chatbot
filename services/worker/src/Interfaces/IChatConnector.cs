@@ -14,5 +14,6 @@ namespace bot
     event EventHandler<MessageReceivedEventArgs> MessageReceived;
     Task Connect();
     Task<List<Message>> GetChatMessages(string id);
+    Task SendMessage(string chatId, string content);
   }
 }
