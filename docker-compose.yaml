@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   worker:
+    container_name: bot-worker
     build:
       context: ./services/worker
       dockerfile: Dockerfile.dev
