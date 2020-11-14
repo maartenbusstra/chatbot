@@ -18,8 +18,7 @@ namespace bot.Models
 
     public async Task<List<Message>> GetMessages()
     {
-      var msgs = await _connector.GetChatMessages(Id);
-      return new List<Message>();
+      return await _connector.GetChatMessages(Id);
     }
 
     public async Task SendMessage(string content)

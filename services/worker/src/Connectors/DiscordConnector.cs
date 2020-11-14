@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
@@ -17,7 +18,6 @@ namespace bot.Connectors
 
     public DiscordConnector(string token)
     {
-      System.Console.WriteLine("hello");
       _token = token;
     }
 
@@ -53,8 +53,8 @@ namespace bot.Connectors
     public async Task<List<Message>> GetChatMessages(string id)
     {
       IMessageChannel channel = await GetChannel(id);
-      var messages = await channel.GetMessagesAsync().FlattenAsync();
-      return new List<Message>();
+      var messages = await channel.GetMessagesAsync(999999).FlattenAsync();
+      return messages.Select(m => ConvertMessage(m)).ToList<Message>();
     }
 
     public async Task SendMessage(string chatId, string content)
@@ -63,9 +63,8 @@ namespace bot.Connectors
       await channel.SendMessageAsync(content);
     }
 
-    private async Task DiscordMessageReceived(SocketMessage message)
+    private Message ConvertMessage(IMessage message)
     {
-      if (message.Author.Id == _client.CurrentUser.Id) return;
       Chat c = new Chat(connector: this, connectorId: message.Channel.Id.ToString())
       {
         Id = "discord:" + message.Channel.Id.ToString(),
@@ -78,13 +77,17 @@ namespace bot.Connectors
         Chat = c,
         CreatedAt = message.CreatedAt.DateTime,
       };
+      return m;
+    }
+
+    private async Task DiscordMessageReceived(SocketMessage message)
+    {
+      if (message.Author.Id == _client.CurrentUser.Id) return;
+
+      Message m = ConvertMessage(message);
 
       EventHandler<MessageReceivedEventArgs> handler = MessageReceived;
-
       handler?.Invoke(this, new MessageReceivedEventArgs() { Message = m });
-      // {
-      //   await message.Channel.SendMessageAsync("Pong!");
-      // }
     }
   }
 }

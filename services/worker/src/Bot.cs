@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
@@ -35,11 +36,9 @@ namespace bot
     {
       Message m = args.Message;
 
-      System.Console.WriteLine("received " + m.Content + " " + m.CreatedAt);
-      m.Reply("this is a reply!");
+      await m.Reply($"received {m.Content} at {m.CreatedAt}");
       List<Message> messages = await m.Chat.GetMessages();
-      if (messages.Count > 0)
-        System.Console.WriteLine("received " + messages[3].Content);
+      await m.Reply($"this chat has {messages.Count()} messages");
     }
   }
 }
