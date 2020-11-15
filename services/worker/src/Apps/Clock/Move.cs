@@ -25,7 +25,8 @@ namespace bot.Apps.Clock
 
     public int Score()
     {
-      // if (!(Hours == MessageHours && Minutes == MessageMinutes)) return 0;
+      if (!(Hours == MessageHours && Minutes == MessageMinutes)) return 0;
+      Console.WriteLine(Hours, Minutes, MessageHours, MessageMinutes);
       if (IsSpecialMove()) return _specialMoves[Message.Content];
       return Hours == Minutes ? 1 : 0;
     }
@@ -33,9 +34,9 @@ namespace bot.Apps.Clock
     public bool IsSpecialMove() => _specialMoves.ContainsKey(Message.Content);
 
     public string ToUniqueId() => String.Join("|", new string[] {
-      Message.CreatedAt.Day.ToString(),
-      Message.CreatedAt.Month.ToString(),
       Message.CreatedAt.Year.ToString(),
+      Message.CreatedAt.Month.ToString(),
+      Message.CreatedAt.Day.ToString(),
       MessageHours,
       MessageMinutes
     });

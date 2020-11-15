@@ -9,7 +9,7 @@ namespace bot.Models
     public User User;
     public Chat Chat;
     public string Content;
-    public DateTime CreatedAt;
+    public DateTimeOffset CreatedAt;
     public async Task Reply(string content)
     {
       await Chat.SendMessage(content);

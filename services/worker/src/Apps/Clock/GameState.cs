@@ -20,15 +20,17 @@ namespace bot.Apps.Clock
   {
     public static GameState Parse(string json)
     {
-      // todo
-      return new GameState() { Players = new List<Player>(), Hits = new List<Hit>() };
+      if (json == null) return new GameState() { Players = new List<Player>(), Hits = new List<Hit>() };
+      GameState state = JsonSerializer.Deserialize<GameState>(
+        json, options: new JsonSerializerOptions
+        {
+          PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+      return state;
     }
 
-    // [JsonPropertyName("players")]
-    public List<Player> Players { get; set; } // = new List<Player>();
-
-    // [JsonPropertyName("hits")]
-    public List<Hit> Hits { get; set; } // = new List<Hit>();
+    public List<Player> Players { get; set; }
+    public List<Hit> Hits { get; set; }
 
     public string ToJson()
     {

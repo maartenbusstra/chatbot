@@ -60,13 +60,8 @@ namespace bot
     private async void HandleMessage(object sender, MessageReceivedEventArgs args)
     {
       Message m = args.Message;
-      if (!(m.Chat.Id == "discord:773180517470044180")) return;
+      // if (!(m.Chat.Id == "discord:773180517470044180")) return;
       RouteMessage(args.Message);
-
-      // await m.Reply($"chat id: {m.Chat.Id}");
-      // await m.Reply($"received {m.Content} at {m.CreatedAt}");
-      // List<Message> messages = await m.Chat.GetMessages();
-      // await m.Reply($"this chat has {messages.Count()} messages");
     }
   }
 }

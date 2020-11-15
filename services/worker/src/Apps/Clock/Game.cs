@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using bot.Models;
 
@@ -32,6 +33,13 @@ namespace bot.Apps.Clock
       return "score!";
     }
 
+    public string Scoreboard()
+    {
+      Players.Sort((a, b) => a.Score < b.Score ? 1 : -1);
+      string scores = String.Join("\n", Players.Select(p => $"{p.Name}: {p.Score}").ToArray());
+      return $"Current scores:\n{scores}";
+    }
+
     private void AddScore(Move move)
     {
       Players.Find(p => p.UserId == move.Message.User.Id).Score += move.Score();
@@ -45,7 +53,6 @@ namespace bot.Apps.Clock
 
     private void EnsurePlayer(User user)
     {
-      Console.WriteLine(State);
       if (Players.FindIndex(p => p.UserId == user.Id) > -1) return;
       Players.Add(UserToPlayer(user));
     }
