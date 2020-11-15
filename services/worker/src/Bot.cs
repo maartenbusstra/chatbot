@@ -23,8 +23,6 @@ namespace bot
     private readonly List<IBotApp> _apps;
     private readonly IStorageAdapter _storage;
 
-    private IEnumerable<IBotApp> processes { get; set; }
-
     public Bot(IConnector connector, List<IBotApp> apps, IStorageAdapter storage)
     {
       _connector = connector;
@@ -35,37 +33,25 @@ namespace bot
 
     public async Task Start()
     {
-      processes = _apps.Select(app =>
-      {
-        return app;
-      });
-
       await _connector.Connect();
     }
 
-    public static void GetAttribute(Type t)
+    private void RouteMessage(Message m)
     {
-      CommandAttribute att;
-
-      // Get the method-level attributes.
-
-      // Get all methods in this class, and put them
-      // in an array of System.Reflection.MemberInfo objects.
-      MemberInfo[] MyMemberInfo = t.GetMethods();
-
-      // Loop through all methods in this class that are in the
-      // MyMemberInfo array.
-      for (int i = 0; i < MyMemberInfo.Length; i++)
+      foreach (var app in _apps)
       {
-        att = (CommandAttribute)Attribute.GetCustomAttribute(MyMemberInfo[i], typeof(CommandAttribute));
-        if (att == null)
+        Type t = app.GetType();
+        CommandAttribute att;
+        MemberInfo[] memberInfo = t.GetMethods();
+
+        for (int i = 0; i < memberInfo.Length; i++)
         {
-          Console.WriteLine("No attribute in member function {0}.\n", MyMemberInfo[i].ToString());
-        }
-        else
-        {
-          Console.WriteLine("The TextMatch Attribute for the {0} member is: {1}.",
-              MyMemberInfo[i].ToString(), att.TextMatch);
+          att = (CommandAttribute)Attribute.GetCustomAttribute(memberInfo[i], typeof(CommandAttribute));
+          if (att == null) continue;
+          var match = att.TextMatch.Match(m.Content);
+          if (!match.Success) continue;
+          method.Invoke(app, new object[] { m, att.TextMatch.Match(m.Content) });
+
         }
       }
     }
@@ -73,12 +59,10 @@ namespace bot
     private async void HandleMessage(object sender, MessageReceivedEventArgs args)
     {
       Message m = args.Message;
+      RouteMessage(args.Message);
 
-      foreach (var process in processes)
-      {
-        GetAttribute(process.GetType());
-      }
-
+      if (!(m.Chat.Id == "discord:773180517470044180")) return;
+      await m.Reply($"chat id: {m.Chat.Id}");
       await m.Reply($"received {m.Content} at {m.CreatedAt}");
       List<Message> messages = await m.Chat.GetMessages();
       await m.Reply($"this chat has {messages.Count()} messages");
