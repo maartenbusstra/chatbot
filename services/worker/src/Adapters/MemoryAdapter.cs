@@ -14,11 +14,13 @@ namespace bot.Adapters
 
     public string GetItem(string key)
     {
-      return "";
+      _state.TryGetValue(key, out string value);
+      return value;
     }
 
     public void SetItem(string key, string value)
     {
+      _state[key] = value;
     }
   }
 }

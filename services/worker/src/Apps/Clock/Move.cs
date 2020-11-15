@@ -25,7 +25,7 @@ namespace bot.Apps.Clock
 
     public int Score()
     {
-      if (!(Hours == MessageHours && Minutes == MessageMinutes)) return 0;
+      // if (!(Hours == MessageHours && Minutes == MessageMinutes)) return 0;
       if (IsSpecialMove()) return _specialMoves[Message.Content];
       return Hours == Minutes ? 1 : 0;
     }
