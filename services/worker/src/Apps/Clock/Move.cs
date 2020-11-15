@@ -7,15 +7,6 @@ namespace bot.Apps.Clock
 
   public class Move
   {
-
-    public Message Message;
-    public string Hours => Message.Content.Split(":")[0];
-    public string Minutes => Message.Content.Split(":")[1];
-    public string MessageHours => Message.CreatedAt.Hour.ToString();
-    public string MessageMinutes => Message.CreatedAt.Minute.ToString();
-
-
-
     private static Dictionary<string, int> _specialMoves = new Dictionary<string, int>()
     {
       {"00:00", 2},
@@ -24,6 +15,13 @@ namespace bot.Apps.Clock
       {"12:34", 1},
       {"13:37", 3}
     };
+
+    public Message Message;
+    public string Hours => Message.Content.Split(":")[0];
+    public string Minutes => Message.Content.Split(":")[1];
+    public string MessageHours => Message.CreatedAt.Hour.ToString();
+    public string MessageMinutes => Message.CreatedAt.Minute.ToString();
+
 
     public int Score()
     {
