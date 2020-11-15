@@ -3,7 +3,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 using bot.Models;
 
 namespace bot
@@ -60,7 +59,6 @@ namespace bot
     private async void HandleMessage(object sender, MessageReceivedEventArgs args)
     {
       Message m = args.Message;
-      // if (!(m.Chat.Id == "discord:773180517470044180")) return;
       RouteMessage(args.Message);
     }
   }
