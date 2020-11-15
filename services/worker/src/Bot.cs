@@ -50,6 +50,7 @@ namespace bot
           if (att == null) continue;
           var match = att.TextMatch.Match(m.Content);
           if (!match.Success) continue;
+          MethodInfo method = t.GetMethod(memberInfo[i].Name);
           method.Invoke(app, new object[] { m, att.TextMatch.Match(m.Content) });
 
         }
