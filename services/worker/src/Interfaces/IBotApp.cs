@@ -7,8 +7,8 @@ namespace bot
 
   public interface IBotApp
   {
-    public static List<string> commands;
-    void HandleMessage(Message message, Match match);
+    // public static List<string> commands;
+    // void HandleMessage(Message message, Match match);
   }
 
 }
