@@ -19,14 +19,17 @@ namespace bot.Apps.Clock
     public Message Message;
     public string Hours => Message.Content.Split(":")[0];
     public string Minutes => Message.Content.Split(":")[1];
-    public string MessageHours => Message.CreatedAt.Hour.ToString();
-    public string MessageMinutes => Message.CreatedAt.Minute.ToString();
+    public string MessageHours => PadZero(Message.CreatedAt.Hour.ToString());
+    public string MessageMinutes => PadZero(Message.CreatedAt.Minute.ToString());
 
+    private string PadZero(string unit)
+    {
+      return unit.Length < 2 ? $"0{unit}" : unit;
+    }
 
     public int Score()
     {
       if (!(Hours == MessageHours && Minutes == MessageMinutes)) return 0;
-      Console.WriteLine(Hours, Minutes, MessageHours, MessageMinutes);
       if (IsSpecialMove()) return _specialMoves[Message.Content];
       return Hours == Minutes ? 1 : 0;
     }

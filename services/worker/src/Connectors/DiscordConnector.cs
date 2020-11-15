@@ -75,7 +75,7 @@ namespace bot.Connectors
         Content = message.Content,
         User = new User() { Id = "discord:" + message.Author.Id.ToString(), Name = message.Author.Username },
         Chat = c,
-        CreatedAt = message.CreatedAt.,
+        CreatedAt = message.CreatedAt.ToLocalTime(),
       };
       return m;
     }
