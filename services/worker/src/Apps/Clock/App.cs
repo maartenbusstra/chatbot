@@ -1,17 +1,16 @@
 using bot.Models;
-using bot;
 using System.Text.RegularExpressions;
 
-namespace bot.Apps
+namespace bot.Apps.Clock
 {
   public class Clock : IBotApp
   {
 
     [Command(@"^(\d\d):(\d\d)$")]
-    public void HandleMove(Message message, Match match)
+    public async void HandleMove(Message message, Match match)
     {
       // blabla
-      message.Reply("SCORE!");
+      await message.Reply("SCORE!");
     }
   }
 }

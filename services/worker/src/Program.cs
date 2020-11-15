@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System;
 using bot.Adapters;
 using bot.Connectors;
-using bot.Apps;
+using bot.Apps.Clock;
 
 namespace bot
 {

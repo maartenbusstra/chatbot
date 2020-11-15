@@ -88,6 +88,7 @@ namespace bot.Connectors
 
       EventHandler<MessageReceivedEventArgs> handler = MessageReceived;
       handler?.Invoke(this, new MessageReceivedEventArgs() { Message = m });
+      await Task.CompletedTask;
     }
   }
 }
