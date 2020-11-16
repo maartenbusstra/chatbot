@@ -29,6 +29,7 @@ namespace bot.Apps.Clock
       if (!(stateJson == null)) return game;
 
       await message.Reply("Just a sec.");
+      // TODO: add "before: Message" param to GetMessages()
       List<Message> messages = await message.Chat.GetMessages();
       messages.Reverse();
       messages.RemoveAt(messages.Count - 1); // discard "Just a sec."
