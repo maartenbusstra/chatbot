@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  worker:
+    container_name: bot-worker
+    build:
+      context: ./services/worker
+      dockerfile: Dockerfile.dev
+    # ports:
+      # - 5000:80
+    env_file: .env
+    volumes:
+      - ./services/worker/src:/app/src
