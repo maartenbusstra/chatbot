@@ -1,12 +1,13 @@
 {
    "version": "0.2.0",
    "configurations": [
-        // {
-        //     "name": "",
-        //     "type": "docker",
-        //     "request": "launch",
-            
-        // },
+        {
+            "name": "Run",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "Run",
+            "platform": "netCore"
+        },
         {
             "name": "Worker: Debug",
             "type": "docker",
@@ -16,8 +17,15 @@
                 "appProject": "${workspaceFolder}/services/worker/worker.csproj"
             }
         },
-        // {
-
-        // }
+        {
+            "name": "Worker: Attach",
+            "type": "docker",
+            "request": "attach",
+            "platform": "netCore",
+            "sourceFileMap": {
+                "/app": "${workspaceFolder}/services/worker"
+            },
+            "processId":"${command:csharp.listRemoteProcess}"
+        }
     ]
 }
