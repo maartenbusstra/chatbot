@@ -1,7 +1,7 @@
 namespace bot
 {
-  public interface IProcess
-  {
+    public interface IProcess
+    {
 
-  }
+    }
 }

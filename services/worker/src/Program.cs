@@ -7,20 +7,20 @@ using bot.Apps.Clock;
 
 namespace bot
 {
-  public class Program
-  {
-    public static void Main(string[] args)
-      => new Program().MainAsync().GetAwaiter().GetResult();
-    public async Task MainAsync()
+    public class Program
     {
-      var ma = new MemoryAdapter();
-      var bot = new Bot(
-        new DiscordConnector(Environment.GetEnvironmentVariable("DISCORD_TOKEN")),
-        new List<IBotApp>(new IBotApp[] { new Clock(ma) }),
-        ma
-      );
+        public static void Main(string[] args)
+          => new Program().MainAsync().GetAwaiter().GetResult();
+        public async Task MainAsync()
+        {
+            var ma = new MemoryAdapter();
+            var bot = new Bot(
+              new DiscordConnector(Environment.GetEnvironmentVariable("DISCORD_TOKEN")),
+              new List<IBotApp>(new IBotApp[] { new Clock(ma) }),
+              ma
+            );
 
-      await bot.Start();
+            await bot.Start();
+        }
     }
-  }
 }
