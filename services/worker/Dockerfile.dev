@@ -4,10 +4,16 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 ENV TZ=Europe/Paris
 
 WORKDIR /app
-EXPOSE 80
 
-COPY . .
+COPY worker.csproj .
 
 RUN dotnet restore
 
-ENTRYPOINT [ "dotnet", "watch", "run", "--no-launch-profile" ]
+
+FROM base as dev
+WORKDIR /app
+
+COPY --from=base . .
+COPY . .
+
+CMD [ "dotnet", "watch", "run", "--no-launch-profile" ]
