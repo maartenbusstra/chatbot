@@ -22,14 +22,11 @@ namespace bot.Apps.Clock
             _storage.SetItem(message.Chat.Id, game.State.ToJson());
         }
 
-        private async Task<Game> GetGame(Message message)
+        private async Task<Game> RecalcGame(Game game, Message message)
         {
-            string stateJson = _storage.GetItem(message.Chat.Id);
-            Game game = new Game(stateJson);
-            if (!(stateJson == null)) return game;
-
             await message.Reply("Just a sec.");
             // TODO: add "before: Message" param to GetMessages()
+            // TODO: add way to stop fetching before this month
             List<Message> messages = await message.Chat.GetMessages();
             messages.Reverse();
             messages.RemoveAt(messages.Count - 1); // discard "Just a sec."
@@ -37,6 +34,12 @@ namespace bot.Apps.Clock
 
             foreach (var m in messages)
             {
+                bool isSameMonth =
+                    message.CreatedAt.Month == m.CreatedAt.Month &&
+                    message.CreatedAt.Year == m.CreatedAt.Year;
+
+                if (!isSameMonth) continue;
+
                 if (new Regex(@"^(\d\d):(\d\d)$").Match(m.Content).Success)
                 {
                     Move move = new Move() { Message = m };
@@ -45,6 +48,17 @@ namespace bot.Apps.Clock
             }
 
             return game;
+        }
+
+        private async Task<Game> GetGame(Message message)
+        {
+            string stateJson = _storage.GetItem(message.Chat.Id);
+            Game game = new Game(stateJson);
+
+            if (stateJson == null) return await RecalcGame(game, message);
+
+            return game;
+
         }
     }
 }
